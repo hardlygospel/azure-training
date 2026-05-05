@@ -16,6 +16,7 @@ nav_order: 1
 On-demand access to compute, storage, and networking resources over the internet — **pay only for what you use**.
 
 ### Five Key Characteristics
+
 | Characteristic | Meaning |
 |---|---|
 | **On-demand self-service** | Provision instantly, no human interaction |
