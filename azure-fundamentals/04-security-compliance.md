@@ -1,199 +1,212 @@
-# 4. Security, Privacy & Compliance 🔐
+---
+title: 4. Security & Compliance
+parent: Azure Fundamentals (AZ-900)
+nav_order: 4
+---
 
-## Azure Security Layers
+# Security, Privacy & Compliance
 
-### Physical Security 🏢
-- Microsoft secures data centers
-- Biometric access, 24/7 monitoring
-- You: No responsibility
-
-### Network Security 🌐
-- **Network Security Groups (NSGs):** Firewall rules (allow/deny traffic)
-- **Azure Firewall:** Centralized network protection
-- **DDoS Protection:** Built-in and standard
-- **You & Microsoft:** Shared responsibility
-
-### Application Security 📱
-- **Application Gateway:** Layer 7 protection
-- **Web Application Firewall (WAF):** Protect web apps
-- **API Management:** Secure API access
-- **You:** Responsible for application code
-
-### Data Security 🔒
-- **Encryption at rest:** Data encrypted in storage
-- **Encryption in transit:** Data encrypted when moving
-- **Azure Key Vault:** Store secrets/keys/certificates
-- **You:** Encrypt sensitive data, manage keys
+[![AZ-900](https://img.shields.io/badge/AZ--900-Domain%204-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)]()
+[![Weight](https://img.shields.io/badge/Exam%20Weight-25--30%25-f59e0b?style=flat-square)]()
 
 ---
 
-## Encryption
+## Shared Responsibility Model
 
-### At Rest
-- Data stored on disk/in database = encrypted
-- **Service:** Transparent Server-Side Encryption (TSLE)
-- **Automatic:** Yes, no action needed
-- **Key management:** Customer Managed Keys (CMK) available
+```
+ALWAYS MICROSOFT:          ALWAYS YOU:            DEPENDS ON MODEL:
+─────────────────          ───────────            ─────────────────
+Physical security          Your data              OS patches (IaaS = you, PaaS = MS)
+Data centre                User accounts          App security (IaaS/PaaS = you)
+Network infrastructure     Identity config        Encryption keys (optional)
+Hypervisor                 Compliance actions
+```
 
-### In Transit
-- Data moving over network = TLS/SSL encrypted
-- **HTTPS:** Always use for web traffic
-- **VPN/ExpressRoute:** For private connections
+| Responsibility | IaaS | PaaS | SaaS |
+|---|---|---|---|
+| Data & identities | You | You | You |
+| Applications | You | You | Microsoft |
+| OS & middleware | You | Microsoft | Microsoft |
+| Infrastructure | Microsoft | Microsoft | Microsoft |
 
-### Key Vault
-- Centralized secret management
-- Store: Passwords, keys, certificates, connection strings
-- **Access:** Secure, audit-logged, role-based
+{: .tip }
+**Exam:** You are **always** responsible for your data and user accounts, regardless of service model.
 
 ---
 
-## Access Control & Identity 👤
+## Azure Active Directory (Entra ID)
 
-### Azure Active Directory (AAD / Entra ID)
-- **Purpose:** User identity and access management
-- **Single Sign-On (SSO):** One login for multiple apps
-- **Multi-Factor Authentication (MFA):** Username + password + phone
-- **Application registration:** Grant app permissions
+Microsoft's cloud **identity platform** — not the same as on-premises Active Directory.
 
-### Role-Based Access Control (RBAC)
-- **Principle:** Least privilege (minimum permissions needed)
-- **Components:**
-  - **Security Principal:** User, group, service principal
-  - **Role:** Set of permissions (Reader, Contributor, Owner)
-  - **Scope:** Subscription, Resource Group, Resource
+| Feature | Description |
+|---|---|
+| **Single Sign-On (SSO)** | One login for Azure, Microsoft 365, and third-party apps |
+| **Multi-Factor Authentication** | Password + second factor (app, SMS, hardware key) |
+| **Conditional Access** | Policy-based access (block risky sign-ins) |
+| **B2B / B2C** | Invite external users or support consumer identities |
+
+### Authentication Strength (best → weakest)
+1. Passwordless (FIDO2 key, Windows Hello)
+2. Authenticator app (push notification)
+3. SMS / voice code
+4. Password alone *(never use for production)*
+
+{: .tip }
+**Exam:** Azure AD is not on-prem AD. You use **Azure AD Connect** to sync on-prem AD users to Azure AD.
+
+---
+
+## Role-Based Access Control (RBAC)
+
+Grant access using **minimum permissions needed** (principle of least privilege).
+
+```
+Who (Security Principal) + What (Role) + Where (Scope) = Access
+
+Example:
+  Alice   +   Contributor   +   Resource Group "Prod"
+  = Alice can create/edit anything in that resource group
+```
 
 ### Built-in Roles
-| Role | Permissions |
-|------|------------|
-| **Owner** | Full access, can assign roles |
-| **Contributor** | Create/modify, cannot assign roles |
-| **Reader** | View only, no changes |
-| **User Access Admin** | Manage role assignments |
 
-### Custom Roles
-- Define exactly what users can do
-- Fine-grained permissions
+| Role | Can do | Can't do |
+|---|---|---|
+| **Owner** | Everything | — |
+| **Contributor** | Create & manage resources | Assign roles |
+| **Reader** | View only | Anything |
+| **User Access Administrator** | Manage role assignments | Manage resources |
+
+### Scope (permission flows downward)
+
+```
+Management Group
+  └── Subscription       ← assign here = applies to all below
+        └── Resource Group
+              └── Resource   ← narrowest scope
+```
 
 ---
 
 ## Network Security
 
 ### Network Security Groups (NSGs)
-- **Firewall rules** at VM level
-- **Allow/Deny** specific traffic (ports, protocols, IPs)
-- **Inbound rules:** Control incoming traffic
-- **Outbound rules:** Control outgoing traffic
+Stateful firewall rules applied to **subnets or individual VMs**.
 
-### Example NSG Rule
 ```
-Allow HTTP (port 80) from internet to VMs
-Allow RDP (port 3389) from admin IP only
-Deny all other traffic
+Rule anatomy:
+  Priority (100–4096) | Source | Port | Protocol | Action (Allow/Deny)
+
+Lower priority number = evaluated first
+Explicit Deny beats Allow at same level
 ```
 
-### Application Security Groups (ASGs)
-- Group VMs logically (tag-based)
-- Apply NSG rules to groups, not individual IPs
+### Azure Firewall
+- Centrally managed, cloud-native firewall
+- Supports FQDN filtering, threat intelligence, forced tunnelling
+- More powerful than NSG — use for hub-spoke networks
+
+### DDoS Protection
+
+| Tier | Cost | Protection |
+|---|---|---|
+| **Network (Basic)** | Free | Always-on, automatic |
+| **IP Protection** | Per IP | Adds telemetry, rapid response |
+| **Network Protection** | ~$2,944/month | Full protection, SLA, DDoS experts |
 
 ---
 
-## Compliance & Privacy 📋
+## Encryption
 
-### Azure Compliance Offerings
-Microsoft maintains certifications for:
-- **GDPR:** EU data protection
-- **HIPAA:** Healthcare data
-- **PCI-DSS:** Credit card data
-- **FedRAMP:** US government
-- **SOC 2:** Service organization security
+| Where | How |
+|---|---|
+| **At rest** | Azure Storage Service Encryption (automatic) |
+| **In transit** | TLS 1.2+ enforced |
+| **Managed keys** | Microsoft manages by default |
+| **Customer-managed keys** | You bring your own key via Azure Key Vault |
 
-### Your Responsibility
-- **Data residency:** Choose region where data lives
-- **Data classification:** Mark what's sensitive
-- **Encryption:** Encrypt sensitive data
-- **Audit logs:** Enable monitoring
+### Azure Key Vault
+Centralised storage for **secrets, keys, and certificates**.
+
+- Store: connection strings, API keys, passwords, TLS certificates
+- Access: RBAC controlled, audit-logged
+- **Never hard-code secrets in application code**
 
 ---
 
-## Azure Policy & Governance
+## Microsoft Defender for Cloud
+
+Formerly Security Center. Provides:
+
+| Feature | What it does |
+|---|---|
+| **Secure Score** | 0–100 rating of your security posture |
+| **Recommendations** | Specific steps to improve score |
+| **Regulatory compliance** | Map your environment to standards |
+| **Threat protection** | Detect and alert on active attacks |
+
+---
+
+## Privacy & Compliance
+
+### Microsoft's Commitments
+- **Online Services Terms (OST)** — What Microsoft does with your data
+- **Data Protection Addendum (DPA)** — GDPR compliance commitments
+- **Microsoft Privacy Statement** — How Microsoft handles personal data
+
+### Compliance Certifications Azure Holds
+`GDPR` `HIPAA` `PCI-DSS` `FedRAMP` `ISO 27001` `SOC 1/2/3` `IRAP (Australia)`
+
+{: .note }
+Microsoft holds the certifications. **You** are responsible for configuring your workloads to meet the standards.
 
 ### Azure Policy
-- **Enforce standards** across resources
-- **Prevent non-compliant** resources
-- **Example:** "All VMs must have tags"
+Enforce governance rules across subscriptions.
 
-### Initiative
-- **Collection of policies** (group related rules)
+```
+Policy: "Storage accounts must use HTTPS only"
+Effect:
+  Audit     → report violations, allow creation
+  Deny      → block non-compliant resource creation
+  Modify    → auto-fix the property
+```
 
-### Management Groups
-- **Organize subscriptions** hierarchically
-- **Apply policies** at multiple levels
-- **Example:** Corporate > Business Unit > Subscription
-
----
-
-## Shared Responsibility Model
-
-| Area | Microsoft | You |
-|------|-----------|-----|
-| **Physical security** | ✓ | |
-| **Network infrastructure** | ✓ | |
-| **Hypervisor** | ✓ | |
-| **OS** | Managed services | IaaS VMs |
-| **Application** | | ✓ |
-| **Data** | | ✓ |
-| **Access control** | Framework | User/password |
-| **Compliance** | Certifications | Implementation |
+### Microsoft Compliance Manager
+- Dashboard showing compliance status against frameworks
+- Lists what Microsoft has done and what **you** must do
+- Available in Microsoft Purview
 
 ---
 
-## Security Tools
+## Governance Tools Summary
 
 | Tool | Purpose |
-|------|---------|
-| **Azure Security Center** | Security recommendations |
-| **Azure Sentinel** | SIEM (Security info event management) |
-| **Azure Defender** | Threat detection |
-| **Network Watcher** | Monitor/troubleshoot network |
+|---|---|
+| **Azure Policy** | Enforce configuration standards |
+| **Resource Locks** | Prevent accidental delete/modify |
+| **Blueprints** (legacy) | Package policies + RBAC + templates |
+| **Management Groups** | Apply policy across subscriptions |
+| **Tags** | Metadata for cost tracking and filtering |
+
+### Resource Locks
+
+| Lock type | Can read | Can modify | Can delete |
+|---|---|---|---|
+| **Read-only** | Yes | No | No |
+| **Delete** | Yes | Yes | No |
+
+{: .tip }
+**Exam:** Locks override RBAC. Even Owners can't delete a resource with a Delete lock unless they remove it first.
 
 ---
 
-## DDoS Protection
+## Exam Checklist
 
-### Standard (Included)
-- Basic protection (no extra cost)
-- Automatic mitigation
-- Sufficient for most workloads
-
-### Premium
-- Advanced protection
-- DDoS attack notifications
-- Cost: ~$3,000/month
-- For critical services only
-
----
-
-## Data Privacy & Residency
-
-### Data Residency
-- **You choose:** Which region stores your data
-- **Exceptions:** Backup copies, service logs, replication
-- **Compliance:** GDPR requires EU data stay in EU
-
-### Sovereign Clouds
-- **Azure Government:** For US government workloads
-- **Azure China:** For China-based organizations
-- Separate from public Azure
-
----
-
-## Exam Tips
-
-- **Shared Responsibility:** Microsoft = infrastructure; You = data & apps
-- **RBAC:** Least privilege principle
-- **NSG:** Firewall rules (allow/deny)
-- **MFA:** Required for security-critical roles
-- **Encryption:** At rest AND in transit
-- **Compliance:** Microsoft provides frameworks; you implement
-- **Data residency:** Choose your region wisely
-- **Key Vault:** For secrets, not application code
+- [ ] Explain the shared responsibility model for IaaS/PaaS/SaaS
+- [ ] Explain RBAC — who, what role, which scope
+- [ ] Name the 4 built-in roles and what each can/can't do
+- [ ] Explain NSG vs Azure Firewall
+- [ ] Describe encryption at rest vs in transit
+- [ ] Explain what Azure Key Vault is for
+- [ ] Describe the difference between Audit and Deny policy effects
+- [ ] Explain resource locks (read-only vs delete)

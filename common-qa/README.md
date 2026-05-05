@@ -1,4 +1,11 @@
-# Common Q&A ❓
+---
+title: Common Q&A
+nav_order: 4
+has_children: true
+permalink: /common-qa/
+---
+
+# Common Q&A
 
 Answers to the most frequently asked exam questions and confusing concepts.
 

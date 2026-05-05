@@ -1,240 +1,212 @@
-# 2. Virtual Networking 🌐
+---
+title: 2. Virtual Networking
+parent: Azure Administrator (AZ-801)
+nav_order: 2
+---
 
-## Virtual Networks (VNets) Overview
+# Virtual Networking
 
-### What Is a VNet?
-- **Isolated network** in Azure
-- **Your own IP address space**
-- **Contains subnets, VMs, services**
-- **Regional:** Single region per VNet
-
-### VNet Basics
-- **Address space:** CIDR notation (e.g., 10.0.0.0/16 = 65,536 IPs)
-- **Subnets:** Divide address space further (10.0.0.0/24 = 256 IPs)
-- **Gateway:** Connect to on-premises or other VNets
-- **DNS:** Azure-provided or custom
+[![AZ-801](https://img.shields.io/badge/AZ--801-Domain%202-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)]()
+[![Weight](https://img.shields.io/badge/Exam%20Weight-15--20%25-f59e0b?style=flat-square)]()
 
 ---
 
-## Subnets
+## Virtual Networks (VNets)
 
-### Purpose
-- **Divide VNet** into logical segments
-- **Apply policies** (NSG) at subnet level
-- **IP management:** Control IP ranges
+Your **private network** in Azure. Resources inside a VNet can talk to each other by default. Nothing gets in or out without you configuring it.
 
-### Subnet Planning
-- **Web tier:** 10.0.1.0/24 (256 IPs)
-- **App tier:** 10.0.2.0/24 (256 IPs)
-- **Database tier:** 10.0.3.0/24 (256 IPs)
-- **Reserved:** Gateway, firewall, etc.
+```
+VNet: 10.0.0.0/16  (65,536 IPs)
+  ├── Subnet: Web       10.0.1.0/24  (251 usable IPs)
+  ├── Subnet: App       10.0.2.0/24
+  ├── Subnet: Database  10.0.3.0/24
+  └── Subnet: GatewaySubnet  10.0.255.0/27  (required for VPN/ER gateway)
+```
 
-### Reserved IPs (Cannot Use)
-- **.0** = Network address
-- **.1** = Gateway
-- **.2, .3** = DNS
-- **.255** = Broadcast
-- **5 IPs minimum reserved** per subnet
+**VNet rules:**
+- Regional (one region per VNet)
+- Address space must not overlap with peered VNets
+- Azure reserves **5 IPs** per subnet (.0, .1, .2, .3, .255)
 
 ---
 
 ## Network Security Groups (NSGs)
 
-### What Is an NSG?
-- **Firewall rules** at subnet or VM level
-- **Allow or deny** traffic
-- **Source/Destination:** IP, CIDR, service tag
-- **Port/Protocol:** Specific or any
+Stateful firewall rules. Attach to a **subnet** (recommended) or individual NIC.
 
-### NSG Rule Structure
+### Rule Structure
 ```
-Direction: Inbound or Outbound
-Priority: 100-4096 (lower = process first)
-Name: Descriptive
-Source: IP, CIDR, Service Tag
-Protocol: TCP, UDP, ICMP, Any
-Port: 80, 443, range, or *
-Action: Allow or Deny
+Priority | Name      | Source        | Port | Protocol | Action
+100      | Allow-80  | Internet      | 80   | TCP      | Allow
+200      | Allow-443 | Internet      | 443  | TCP      | Allow
+300      | Deny-RDP  | Internet      | 3389 | TCP      | Deny
+65000    | (default) | VirtualNetwork| *    | *        | Allow
+65500    | (default) | *             | *    | *        | Deny
 ```
 
-### Common Rules
-| Direction | Source | Port | Action | Purpose |
-|-----------|--------|------|--------|---------|
-| Inbound | Internet | 80 | Allow | HTTP traffic |
-| Inbound | Internet | 443 | Allow | HTTPS traffic |
-| Inbound | Internet | 3389 | Deny | Block RDP (use Bastion) |
-| Inbound | 10.0.0.0/8 | 1433 | Allow | SQL from internal |
-| Outbound | Any | Any | Allow | Default (allow all out) |
+- **Lower priority number = evaluated first**
+- **Deny beats Allow** at same priority
+- Default rules (65000+) can't be deleted but can be overridden
+- NSG applied to both subnet AND NIC — both evaluated (more restrictive wins)
 
 ### Service Tags
-- **Predefined IP ranges** for Azure services
-- **Example:** "AzureCloud" = all Azure IPs
-- **Use case:** Allow traffic to specific Azure service
+Pre-defined IP ranges for Azure services — use instead of manually listing IPs.
 
-### Application Security Groups (ASGs)
-- **Group resources logically**
-- **Tag-based** (not IP-based)
-- **Cleaner NSG rules**
+| Tag | Represents |
+|---|---|
+| `Internet` | All public IPs |
+| `VirtualNetwork` | VNet + peered VNets |
+| `AzureLoadBalancer` | Azure health probe IPs |
+| `Storage` | All Azure Storage IPs |
+| `Sql` | All Azure SQL IPs |
 
-### NSG Effective Rules
-- **Order matters:** Lower priority number = higher precedence
-- **Deny overrides Allow**
-- **Check both inbound/outbound**
-- **VM NSG + Subnet NSG both apply**
-
----
-
-## IP Addressing
-
-### Public IP
-- **Internet-routable** address
-- **Static or Dynamic**
-- **Static preferred** (doesn't change)
-- **Cost:** ~$3/month for unused
-
-### Private IP
-- **Internal only** (10.x, 172.x, 192.x)
-- **Assignment:** Static or Dynamic
-- **VM always has** at least one
-
-### Network Interfaces (NICs)
-- **Attach IP addresses** to VMs
-- **VM can have multiple NICs** (different subnets)
-- **Each NIC = private IP + optional public IP**
+{: .tip }
+**Exam:** Use service tags in NSG rules instead of specific IPs — they update automatically as Azure changes IPs.
 
 ---
 
 ## Routing
 
-### System Routes (Default)
-- **Automatic** created by Azure
-- **Route:** Traffic within VNet goes directly
-- **0.0.0.0/0 (default):** Goes to internet
+Azure creates **system routes** automatically. Override them with a **User-Defined Route (UDR)** table attached to a subnet.
 
-### Custom Routes (Route Table)
-- **Override default** routing
-- **Next hop:** VM, VPN gateway, firewall, internet
-- **Use case:** Force traffic through firewall
-
-### Route Priority
-1. **Most specific route** wins (longest prefix match)
-2. **System routes** before custom routes
-3. **If no match:** Drop or route to default
-
-### User Defined Routes (UDR)
 ```
-Example: Route 192.168.0.0/16 through Firewall VM
-- Destination: 192.168.0.0/16
-- Next hop type: Virtual appliance
-- Next hop IP: 10.0.0.4 (Firewall VM)
+Default system routes:
+  10.0.0.0/16 → VirtualNetwork (stay in VNet)
+  0.0.0.0/0   → Internet (everything else goes out)
+
+Custom UDR example (force traffic through firewall):
+  0.0.0.0/0   → Virtual Appliance (Firewall VM: 10.0.0.4)
 ```
+
+**Longest prefix match wins** — more specific route takes priority.
+
+Next hop types: `VirtualNetwork`, `Internet`, `VirtualAppliance`, `VirtualNetworkGateway`, `None`
 
 ---
 
-## Connectivity
+## Connectivity Options
 
-### VNet-to-VNet Peering
-- **Connect two VNets** directly
-- **Low latency, high bandwidth**
-- **No encryption** (private link)
-- **Transitive peering:** No (A-B, B-C ≠ A-C)
+### VNet Peering
+Connect two VNets directly — traffic stays on Azure backbone, not internet.
+
+```
+VNet-A (10.0.0.0/16) ←──── peering ────→ VNet-B (10.1.0.0/16)
+
+Rules:
+  ✓ Low latency, high bandwidth
+  ✓ No encryption needed (private backbone)
+  ✗ Not transitive: A↔B and B↔C does NOT give A↔C
+  ✗ Address spaces cannot overlap
+```
 
 ### Site-to-Site VPN
-- **Connect on-premises to Azure**
-- **Over internet** (encrypted)
-- **Slower** than ExpressRoute
-- **Cost:** Cheaper than ExpressRoute
+Connect on-premises network to Azure over encrypted internet tunnel.
+
+```
+On-prem network ──[IPSec/IKE]──→ VPN Gateway ──→ Azure VNet
+                   (internet)
+```
+- Requires **VPN Gateway** in a `GatewaySubnet` (/27 or larger)
+- **Policy-based** (static, legacy) vs **Route-based** (dynamic, recommended)
+- Speed: up to 10 Gbps (VpnGw5)
 
 ### ExpressRoute
-- **Dedicated private link**
-- **Higher speed, lower latency**
-- **Expensive** ($50-350/month)
-- **No internet** traffic
+Private dedicated circuit — never touches the internet.
 
-### VPN Gateway
-- **Manages VPN connections**
-- **Located in subnet** (GatewaySubnet required)
-- **Requires:** VNet with /27 or larger subnet
-- **Policy-based or Route-based**
+```
+On-prem  ──[carrier circuit]──→ ExpressRoute edge ──→ Azure VNet
+```
 
----
+| | VPN Gateway | ExpressRoute |
+|---|---|---|
+| Path | Internet (encrypted) | Private circuit |
+| Latency | Higher | Lower |
+| Speed | Up to 10 Gbps | Up to 100 Gbps |
+| SLA | 99.9% | 99.95% |
+| Cost | Cheap | Expensive |
+| Setup | Hours | Weeks |
 
-## Network Watcher
-
-### Features
-- **IP Flow Verify:** Check if traffic allowed
-- **Next Hop:** Trace routing path
-- **Connection Troubleshoot:** Test connectivity
-- **NSG Flow Logs:** Monitor NSG traffic
-- **Packet Capture:** Capture packets for analysis
-
-### Use Cases
-- **VM can't connect?** IP Flow Verify
-- **Traffic going wrong way?** Next Hop
-- **Too much traffic?** NSG Flow Logs
+{: .tip }
+**Exam:** ExpressRoute = private, not internet. Use when compliance or latency matters. VPN = good enough for most.
 
 ---
 
-## Azure Firewall vs NSG
+## IP Addressing
 
-| Feature | NSG | Azure Firewall |
-|---------|-----|----------------|
-| **Level** | VM/Subnet | Network-wide |
-| **Stateful** | Yes | Yes |
-| **FQDN filtering** | No | Yes |
-| **Threat intelligence** | No | Yes |
-| **Cost** | Free | ~$1.25/hour |
-| **Best for** | Simple rules | Enterprise |
+| Type | Scope | Assignment |
+|---|---|---|
+| **Private IP** | Internal (10.x, 172.16–31.x, 192.168.x) | Dynamic (DHCP) or Static |
+| **Public IP** | Internet-facing | Dynamic or Static |
 
----
+**Always use Static public IPs** for anything that needs a consistent address (DNS records, firewall rules).
 
-## DNS
-
-### Azure-Provided DNS
-- **Automatic** for all VNets
-- **Recursive resolver** (168.63.129.16)
-- **Sufficient for most** scenarios
-
-### Custom DNS
-- **Configure DNS servers** in VNet
-- **Point to:** Custom DNS servers
-- **Use case:** On-premises AD, special requirements
-
-### Private DNS Zones
-- **Internal DNS** within VNet
-- **Not visible** to internet
-- **Useful for:** Multiple VNets sharing DNS
+**Deallocating a VM releases a dynamic public IP** — it changes on restart. Use static to prevent this.
 
 ---
 
 ## Load Balancing
 
-### Load Balancer (Layer 4)
-- **Distribute TCP/UDP** traffic
-- **Low cost**
-- **Best for:** Simple load balancing
+```
+Internet users
+      ↓
+  Azure Load Balancer (Layer 4 — TCP/UDP)
+      ↓
+  Backend pool: VM1, VM2, VM3
 
-### Application Gateway (Layer 7)
-- **HTTP/HTTPS** aware
-- **URL-based routing** (/api → backend1, /images → backend2)
-- **SSL termination**
-- **Web Application Firewall** (WAF)
+  OR
 
-### Front Door (Global)
-- **Geo-redundant load balancing**
-- **Global load balancing**
-- **Route to nearest region**
+  Application Gateway (Layer 7 — HTTP/HTTPS)
+      ↓ routes by URL path:
+      /api/*  → API servers
+      /images/* → Storage
+      /*      → Web servers
+```
+
+| Service | Layer | Features |
+|---|---|---|
+| **Load Balancer** | 4 (TCP/UDP) | Simple, fast, cheap |
+| **Application Gateway** | 7 (HTTP/S) | URL routing, SSL termination, WAF |
+| **Traffic Manager** | DNS-based | Global, latency/geo routing |
+| **Front Door** | Global HTTP | CDN + WAF + load balance worldwide |
 
 ---
 
-## Exam Tips
+## Azure Bastion
 
-- **VNet:** Region-specific, isolated network
-- **Subnet:** Divide VNet, apply NSG
-- **NSG:** Stateful firewall (deny overrides allow)
-- **Service Tag:** Predefined Azure IP ranges
-- **Private vs Public IP:** Private = internal, Public = internet
-- **Routing:** Most specific route wins
-- **Peering:** Direct VNet-to-VNet (not transitive)
-- **VPN vs ExpressRoute:** VPN cheaper, ER faster/private
-- **Firewall vs NSG:** NSG = simple, Firewall = advanced
+Secure browser-based RDP/SSH — no public IP on the VM required.
+
+```
+Browser → Azure Portal → Bastion Host → VM (private IP only)
+                          (in your VNet)
+```
+
+- Protects port 3389/22 from internet exposure
+- Requires **AzureBastionSubnet** (/26 or larger)
+- Cost: ~$140/month for standard tier
+
+---
+
+## Network Watcher
+
+Diagnostic tools for networking issues.
+
+| Tool | Use it to… |
+|---|---|
+| **IP Flow Verify** | Check if an NSG allows/blocks specific traffic |
+| **Next Hop** | Find where a packet would be routed |
+| **Connection Troubleshoot** | Test end-to-end TCP connectivity |
+| **NSG Flow Logs** | Log which traffic was allowed/denied |
+| **Packet Capture** | Capture packets on a VM's NIC |
+
+---
+
+## Exam Checklist
+
+- [ ] Plan a VNet with 3 subnets and correct CIDR
+- [ ] Create an NSG rule and explain priority evaluation
+- [ ] Explain service tags and when to use them
+- [ ] Describe UDRs and when you need a route table
+- [ ] Compare VPN Gateway vs ExpressRoute
+- [ ] Explain VNet peering limitations (non-transitive, no overlap)
+- [ ] Compare Load Balancer vs Application Gateway
+- [ ] Explain Azure Bastion and why it's preferred over public IP + RDP

@@ -1,302 +1,239 @@
-# 5. Monitoring & Compliance 📊
+---
+title: 5. Monitoring & Compliance
+parent: Azure Administrator (AZ-801)
+nav_order: 5
+---
+
+# Monitoring & Compliance
+
+[![AZ-801](https://img.shields.io/badge/AZ--801-Domain%205-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)]()
+[![Weight](https://img.shields.io/badge/Exam%20Weight-10--15%25-f59e0b?style=flat-square)]()
+
+---
 
 ## Azure Monitor
 
-### What Is Azure Monitor?
-- **Centralized monitoring** for all Azure resources
-- **Metrics, logs, traces**
-- **Alerts** when problems detected
-- **Dashboards** for visualization
+Central platform for **all** observability data in Azure.
 
-### Components
-
-**Metrics:**
-- **Numeric data** (CPU %, RAM, disk I/O)
-- **Real-time** (near-instant)
-- **Retention:** 93 days
-- **Multi-dimensional:** Filter by region, VM name, etc.
-
-**Logs (Analytics):**
-- **Detailed events** (application logs, errors)
-- **Query with KQL** (Kusto Query Language)
-- **Retention:** 30-730 days (configurable)
-- **Slower** than metrics (but more detailed)
-
-**Application Insights:**
-- **Application monitoring** (exceptions, performance)
-- **Detect issues** users experience
-- **User analytics**
-- **Dependency tracking** (calls to APIs, databases)
-
-### Data Flow
 ```
-Resource → Monitor → Diagnostic Settings → Storage/Logs
-                   ↓
-              Metrics (fast)
-              Alerts
+Resources → Diagnostic Settings → Azure Monitor
+                                       ├── Metrics (numbers, real-time)
+                                       ├── Logs (events, queryable)
+                                       ├── Alerts (notify or act)
+                                       └── Dashboards / Workbooks
+```
+
+### Metrics vs Logs
+
+| | Metrics | Logs |
+|---|---|---|
+| **Type** | Numeric time-series | Structured records |
+| **Latency** | Near real-time (~1 min) | Minutes |
+| **Retention** | 93 days (free) | 30–730 days (configurable) |
+| **Query** | Chart/threshold | KQL queries |
+| **Examples** | CPU %, memory %, disk IOPS | Error events, audit logs, app traces |
+
+### Diagnostic Settings
+Enable to send resource logs/metrics to:
+- **Log Analytics workspace** — query with KQL
+- **Storage account** — archive cheaply
+- **Event Hub** — stream to SIEM (Sentinel, Splunk)
+
+```
+Resource → Diagnostic settings → Add → select destinations
 ```
 
 ---
 
-## Log Analytics
+## Log Analytics & KQL
 
-### What Is KQL?
-- **Query language** for Azure Logs
-- **Similar to SQL** (but simpler)
-- **Retrieve and analyze** logs
+### Kusto Query Language (KQL)
 
-### Simple KQL Examples
 ```kusto
-// Find all errors from past 24 hours
+-- Find all errors in last 24 hours
 Syslog
-| where Severity == "ERROR"
+| where Severity == "err"
 | where TimeGenerated > ago(24h)
+| project TimeGenerated, Computer, SyslogMessage
 
-// Count requests by response code
-requests
-| summarize count() by resultCode
-| order by count() desc
+-- Count by category
+AzureActivity
+| where OperationNameValue contains "delete"
+| summarize count() by ResourceGroup
+| order by count_ desc
 
-// Find slow queries
+-- Top 10 slowest requests
 requests
-| where duration > 5000
-| project timestamp, name, duration
+| where timestamp > ago(1h)
+| top 10 by duration desc
+| project timestamp, name, duration, resultCode
 ```
 
-### Workspaces
-- **Container** for logs
-- **Regional** (you choose)
-- **Billing unit**
-- **Access control** (RBAC)
+KQL cheat sheet:
+- `|` — pipe (chain operations)
+- `where` — filter
+- `project` — select columns
+- `summarize count() by X` — group and count
+- `ago(24h)` — relative time
+- `top N by field` — top N rows
 
 ---
 
-## Alerts & Actions
+## Alerts
 
-### Alert Rules
+### Alert Rule Components
+
 ```
-IF metric exceeds threshold
-THEN execute action
+Condition: CPU % > 80% for 5 minutes
+Severity:  2 (Warning)
+Action Group: → Email ops@company.com
+              → SMS +61-xxx-xxx
+              → Webhook: https://...
+              → Runbook: auto-restart-vm
 ```
 
-### Metrics Alerts
-- **Monitor metrics** (CPU, memory)
-- **Simple conditions** (CPU > 80%)
-- **Fast** (seconds to alert)
+### Alert Types
 
-### Log Alerts
-- **Monitor logs** via query
-- **Complex conditions** (errors from specific service)
-- **Slower** (query takes time)
-
-### Alert Actions
-| Action | Example |
-|--------|---------|
-| **Email** | admin@company.com |
-| **SMS** | Send text to phone |
-| **Webhook** | Call external API |
-| **Runbook** | Auto-remediate (VM restart) |
-| **Logic App** | Complex automation |
+| Type | Based on | Latency | Use |
+|---|---|---|---|
+| **Metric alert** | Metric threshold | ~1 min | CPU, memory, disk |
+| **Log alert** | KQL query result | 5+ min | Error count, custom logic |
+| **Activity Log alert** | Azure operation | Near-instant | Resource deleted, policy changed |
 
 ### Action Groups
-- **Reusable** set of actions
-- **Email A, SMS B, Webhook C** together
-- **Apply to multiple** alerts
-
----
-
-## Application Insights
-
-### Key Features
-- **Exception tracking** (errors)
-- **Performance monitoring** (slow requests)
-- **Dependency tracking** (calls to APIs, databases)
-- **User analytics** (sessions, page views)
-- **Custom events** (business metrics)
-
-### Instrumentation
-```
-Install SDK → Send telemetry → Application Insights → Analyze
-```
-
-### Performance Counters
-- **Server response time** (p50, p95, p99)
-- **Request volume**
-- **Availability** (synthetic monitoring)
-- **Dependency performance** (database queries)
+Reusable set of notification/action targets. Create once, attach to many alerts.
 
 ---
 
 ## Azure Advisor
 
-### What Is It?
-- **AI recommendations** based on your resources
-- **5 categories:**
-  - **Cost:** Save money
-  - **Reliability:** Improve HA
-  - **Performance:** Speed up
-  - **Operational Excellence:** Best practices
-  - **Security:** Security issues
+AI-powered recommendations across 5 categories:
 
-### Common Recommendations
-- **Unused resources:** Delete (save money)
-- **Reserved instances:** Buy (save 30-70%)
-- **Availability:** Add redundancy
-- **Security:** Enable MFA, patch VMs
+| Category | Example recommendation |
+|---|---|
+| **Cost** | "Deallocate VMs running <5% CPU" |
+| **Reliability** | "Add VM to availability zone" |
+| **Security** | "Enable MFA on accounts with admin roles" |
+| **Performance** | "Upgrade SQL tier — near DTU limit" |
+| **Operational Excellence** | "Enable soft delete on storage accounts" |
 
 ---
 
-## Diagnostic Settings
+## Azure Policy
 
-### What It Does
-- **Route logs/metrics** to storage
-- **Archive to:** Log Analytics, Storage, Event Hubs
-- **Enable monitoring** of resources
+### How Policy Works
 
-### Typical Setup
 ```
-Azure Resource
-  → Diagnostic Settings
-    → Send metrics to Log Analytics (query)
-    → Send logs to Storage (archive)
-    → Send to Event Hubs (stream to SIEM)
+Policy Definition  →  Assignment  →  Scope  →  Effect
+"Must have tags"      "All VMs"      Sub/RG    Deny / Audit / Modify
 ```
 
----
+### Policy Effects (in order of strictness)
 
-## Azure Security Center
-
-### Capabilities
-- **Security recommendations** (patching, firewalls)
-- **Threat detection** (suspicious activity)
-- **Vulnerability scanning** (exposed databases, weak settings)
-- **Compliance assessment** (HIPAA, GDPR, etc.)
-
-### Secure Score
-- **0-100 metric** of security posture
-- **Recommendations** to improve
-- **Track improvement** over time
-
----
-
-## Compliance & Policy
-
-### Azure Policy
-
-**What It Does:**
-- **Enforce** governance rules
-- **Prevent** non-compliant resources
-- **Audit** for compliance
-
-**Example Policies:**
-- "All VMs must have tags"
-- "Storage accounts must use HTTPS"
-- "VMs must use managed disks"
-- "Databases must have encryption"
-
-**Enforcement:**
-- **Audit:** Report violations (don't block)
-- **Deny:** Block non-compliant resource creation
-- **Audit + Append:** Report + add default values
-
-### Policy Assignments
-```
-Policy: "All VMs must have backup"
-Scope: Resource Group "Production"
-Effect: Deny (reject VM creation if no backup)
-```
-
-### Initiatives
-- **Collection of policies** (group related)
-- **Example:** "CIS Azure Foundations" (20+ policies)
-
-### Policy Effects
-| Effect | What Happens |
-|--------|-------------|
-| **Audit** | Report violation (allow creation) |
-| **Deny** | Block resource creation |
-| **Append** | Add missing properties |
-| **Modify** | Change resource properties |
+| Effect | What happens |
+|---|---|
 | **Disabled** | Policy ignored |
+| **Audit** | Non-compliant resource created + flagged |
+| **AuditIfNotExists** | Audit if a related resource doesn't exist |
+| **Append** | Add missing fields (e.g. tags) |
+| **Modify** | Change resource properties on create/update |
+| **Deny** | Block non-compliant resource creation |
+| **DeployIfNotExists** | Deploy a related resource if missing |
+
+{: .tip }
+**Exam:** Start with Audit to find existing violations. Switch to Deny once you're confident.
+
+### Initiatives (Policy Sets)
+Group multiple policies into one assignment.
+
+Example: "CIS Azure Foundations Benchmark" = 100+ policies bundled.
+
+### Compliance Dashboard
+- See % compliant resources per policy
+- Drill down to non-compliant resources
+- Track over time
 
 ---
 
-## Compliance Offerings
+## Resource Locks
 
-### Built-in Certifications
-- **GDPR:** EU data protection
-- **HIPAA:** Healthcare (US)
-- **PCI-DSS:** Payment cards
-- **FedRAMP:** US government
-- **SOC 2:** Service organization
-- **ISO 27001:** Information security
+Prevent accidental changes, applied **on top of** RBAC.
 
-### Compliance Manager
-- **Track** compliance status
-- **Microsoft assessments** (what's done)
-- **Customer actions** (what you must do)
-- **Improvement actions** → increase score
+| Lock | Read | Modify | Delete |
+|---|---|---|---|
+| **ReadOnly** | ✓ | ✗ | ✗ |
+| **CanNotDelete** | ✓ | ✓ | ✗ |
+
+```
+Inheritance: Lock on RG applies to all resources in it
+Override: Must remove lock first (requires Write on lock object)
+```
+
+{: .tip }
+**Exam:** Even an Owner cannot delete a resource with a CanNotDelete lock without removing it first.
 
 ---
 
-## Governance Best Practices
+## Activity Log
 
-### Naming Convention
-```
-company-environment-resource-instance
-Example: acme-prod-vm-web01
-```
+Every create/modify/delete operation on Azure resources is recorded here.
 
-### Tagging Strategy
-```
-Tags: Cost Center, Environment, Owner, Application
-Examples:
-- costcenter: 1234
-- environment: production
-- owner: alice@acme.com
-- application: website
-```
+- **Retention:** 90 days (export to Log Analytics for longer)
+- **Includes:** Who did it, what resource, when, result
+- **Use:** Audit trail, troubleshoot unexpected changes
 
-### Resource Organization
 ```
-Management Group (Corp)
-├── Production
-│   ├── RG-WebServers
-│   ├── RG-Databases
-├── Non-Production
-│   ├── RG-Dev
-│   ├── RG-Test
+Example: "Who deleted the production VM?"
+→ Azure Monitor → Activity Log → filter by resource + timeframe
 ```
 
 ---
 
-## Backup Compliance
+## Microsoft Defender for Cloud
 
-### Backup Policies
-- **Retention:** 7 years typical
-- **Encryption:** Customer-managed keys
-- **Geo-redundant:** Secondary region
-- **Audit logs:** Track access
+Security posture management + workload protection.
 
-### RTO/RPO Targets
-| Service | RTO | RPO |
-|---------|-----|-----|
-| **VMs** | 2 hours | 1 day |
-| **Databases** | 1 hour | 5 minutes |
-| **File shares** | 1 hour | 1 hour |
+| Feature | Purpose |
+|---|---|
+| **Secure Score** | 0–100 rating of security posture |
+| **Recommendations** | Specific remediation steps |
+| **Regulatory Compliance** | Map to NIST, PCI-DSS, ISO 27001, etc. |
+| **Defender Plans** | Threat detection per workload type |
+
+### Defender Plans (paid add-ons)
+
+| Plan | Protects |
+|---|---|
+| Defender for Servers | VMs — vulnerability assessment, JIT |
+| Defender for SQL | SQL databases — threat detection |
+| Defender for Storage | Storage accounts — malware, unusual access |
+| Defender for Containers | AKS, ACR — image scanning, runtime protection |
 
 ---
 
-## Exam Tips
+## Update Management
 
-- **Monitor:** Metrics + Logs
-- **Metrics:** Real-time, 93-day retention
-- **Logs:** Detailed, 30-730 days retention
-- **Alert:** When metric exceeds threshold
-- **Advisor:** Recommendations (cost, reliability, etc.)
-- **Security Center:** Security score + recommendations
-- **Policy:** Enforce rules (audit/deny)
-- **Compliance Manager:** Track compliance status
-- **Diagnostic Settings:** Route logs to storage
-- **KQL:** Query language for logs
-- **Tagging:** Organize resources (cost tracking)
+Manage OS patches across Azure and on-prem VMs.
+
+```
+Flow:
+  Assessment  →  Schedule  →  Deploy  →  Report
+  (what's missing)  (maintenance window)  (install)  (compliance)
+```
+
+- Supports: Windows and Linux
+- Integrates with: Azure Monitor, Activity Log
+- Pre/post scripts for custom steps (e.g. drain load balancer before patching)
+
+---
+
+## Exam Checklist
+
+- [ ] Explain the difference between Metrics and Logs in Azure Monitor
+- [ ] Write a basic KQL query (filter, project, summarize)
+- [ ] Describe the components of an alert rule
+- [ ] Explain Audit vs Deny policy effects
+- [ ] Explain resource locks and how they interact with RBAC
+- [ ] Describe the Activity Log and its retention period
+- [ ] Explain Secure Score in Defender for Cloud
+- [ ] Describe Update Management and how patches are deployed

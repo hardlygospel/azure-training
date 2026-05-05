@@ -1,242 +1,194 @@
-# 3. Compute Management 🖥️
+---
+title: 3. Compute Management
+parent: Azure Administrator (AZ-801)
+nav_order: 3
+---
 
-## Virtual Machines (VMs)
+# Compute Management
 
-### VM Basics
-- **Own OS, applications, data**
-- **Full control** of configuration
-- **Pay by hour** (or reserved instances)
-- **Requires:** VNet, storage, NIC
-
-### VM Lifecycle
-```
-Stopped (deallocated) → Started → Running → Stopped → Deleted
-Cost: Free when deallocated | Cost: Pay per hour when running
-```
-
-### Creating a VM
-1. **Resource Group**
-2. **Name + Region**
-3. **Image** (Windows 2022, Ubuntu 20.04, custom)
-4. **Size** (B2s, D2s, E16s, etc.)
-5. **Admin account** (username/password or SSH key)
-6. **Disks** (OS disk + data disks)
-7. **VNet + Subnet**
-8. **Public IP** (optional)
-9. **NSG** (firewall rules)
-
-### VM Sizes
-| Category | Use | Example |
-|----------|-----|---------|
-| **B (Burstable)** | Dev, test, light | B2s, B3s |
-| **D (General Purpose)** | Most workloads | D2s, D4s, D16s |
-| **E (Memory Optimized)** | Databases, SAP | E2s, E8s |
-| **F (Compute Optimized)** | Batch, HPC | F2s, F4s |
-| **M (Mega)** | Very large workloads | M64s, M416s |
-
-### VM Disks
-- **OS disk:** Windows/Linux system
-- **Data disks:** Additional storage
-- **Temp disk:** Temporary (lost on reboot)
-- **Managed disks:** Azure manages storage account
-
-### Disk Types
-| Type | Speed | Cost | Use |
-|------|-------|------|-----|
-| **Premium SSD** | 7,500 IOPS | $$ | Production DBs |
-| **Standard SSD** | 500 IOPS | $ | General purpose |
-| **Standard HDD** | 60 IOPS | $ | Backup, archive |
+[![AZ-801](https://img.shields.io/badge/AZ--801-Domain%203-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)]()
+[![Weight](https://img.shields.io/badge/Exam%20Weight-20--25%25-f59e0b?style=flat-square)]()
 
 ---
 
-## Scale Sets & Availability
+## Virtual Machines
 
-### Virtual Machine Scale Sets (VMSS)
-- **Automatically scale** VMs based on demand
-- **Load balancer** included
-- **Create/delete** VMs automatically
-- **Use case:** Web apps, APIs with variable load
+### VM States & Billing
 
-### Availability Set
-- **Ensures VMs spread** across hardware
-- **Fault domains:** Physical rack separation
-- **Update domains:** Patch separately
-- **SLA:** 99.95% with 2+ VMs
+```
+Stopped (OS shutdown)     → still billed for compute
+Deallocated               → NOT billed for compute (still billed for disk)
+Running                   → billed
+Deleted                   → not billed (disks remain unless deleted)
+```
+
+{: .tip }
+**Exam:** "Stopped" and "Deallocated" look the same to users but cost differently. Always deallocate, not just stop.
+
+### VM Components
+Every VM needs:
+- **Compute** — size (vCPUs, RAM)
+- **OS disk** — managed disk (Premium SSD recommended)
+- **NIC** — attached to a subnet
+- **OS image** — Windows Server, Ubuntu, RHEL, custom, etc.
+
+Optional: Data disks, public IP, availability zone, extensions.
+
+### VM Sizes
+
+| Family | vCPU/RAM | Use |
+|---|---|---|
+| **B** (Burstable) | 1–20 / 0.5–80 GB | Dev, test, light workloads |
+| **D** (General Purpose) | 2–96 / 4–384 GB | Web, app servers |
+| **E** (Memory Optimised) | 2–104 / 16–672 GB | Databases, in-memory analytics |
+| **F** (Compute Optimised) | 2–72 / 4–144 GB | CPU-heavy batch jobs |
+| **L** (Storage Optimised) | 8–80 / 64–640 GB | High-throughput databases |
+| **N** (GPU) | 4–64 | ML training, graphics rendering |
+
+### Disk Types
+
+| Type | Max IOPS | Cost | Use |
+|---|---|---|---|
+| **Premium SSD** | 20,000 | $$$ | Production databases |
+| **Standard SSD** | 6,000 | $$ | General purpose |
+| **Standard HDD** | 500 | $ | Backup, dev/test |
+| **Ultra Disk** | 160,000 | $$$$ | Extreme performance |
+
+{: .tip }
+**Exam:** Premium SSD requires a Premium-capable VM size (e.g. D2s_v3 has the "s" suffix = supports Premium Storage).
+
+---
+
+## Availability
+
+```
+No redundancy:          Single point of failure, no SLA on hardware
+Availability Set:       VMs spread across fault + update domains (99.95% SLA)
+Availability Zones:     VMs in separate data centres (99.99% SLA)  ← preferred
+Region pairs:           Full regional failover (DR scenario)
+```
+
+### Availability Sets
+- **Fault domains** (FD): Separate physical racks, power, networking
+- **Update domains** (UD): Patched in sequence so not all VMs restart at once
+- Max 3 FDs, 20 UDs per set
+- VMs in same set = 99.95% SLA for multi-instance
 
 ### Availability Zones
-- **Physically separate** data centers (same region)
-- **SLA:** 99.99% with 3+ VMs across zones
-- **Preferred:** Over availability sets
+- Physically separate data centres with independent power, cooling, networking
+- 2+ VMs across zones = **99.99% SLA**
+- Zone-redundant storage and managed disks available
+- **Prefer zones over availability sets** for new deployments
 
-### VM Deployment Strategy
+---
+
+## Virtual Machine Scale Sets (VMSS)
+
+Auto-scale a fleet of identical VMs.
+
 ```
-Production:
-- Minimum 2 VMs
-- Across availability zones
-- Behind load balancer
-= 99.95% - 99.99% uptime SLA
+Load: low  →  2 VMs running
+Load: high →  auto-scale to 10 VMs
+Load: low  →  scale back to 2
 ```
+
+- Integrated with Load Balancer or Application Gateway
+- Scale based on CPU, memory, schedule, or custom metric
+- **Uniform mode** — identical VMs from same image
+- **Flexible mode** — mix of VM configurations
 
 ---
 
 ## VM Extensions
 
-### What Is an Extension?
-- **Post-deployment** configuration
-- **Install software** automatically
-- **Run scripts** on startup
-- **Examples:** Anti-malware, monitoring, domain join
+Install software and run scripts **after** VM creation.
 
-### Common Extensions
-| Extension | Purpose |
-|-----------|---------|
-| **Custom Script** | Run PowerShell/bash script |
-| **Desired State Config** | Infrastructure as code |
-| **Domain Join** | Join Windows domain |
-| **Anti-malware** | Windows Defender settings |
-| **Dependency Agent** | VM monitoring |
+| Extension | What it does |
+|---|---|
+| **Custom Script Extension** | Run a PowerShell or bash script |
+| **DSC (Desired State Config)** | Enforce configuration state |
+| **Azure Monitor Agent** | Send metrics and logs to Monitor |
+| **Microsoft Antimalware** | Windows Defender configuration |
+| **Domain Join** | Join VM to Active Directory domain |
 
 ---
 
-## VM Administration
+## Remote Access
 
-### Remote Access
+| Method | Protocol | Port | Use |
+|---|---|---|---|
+| **RDP** | RDP | 3389 | Windows VMs |
+| **SSH** | SSH | 22 | Linux VMs |
+| **Azure Bastion** | HTTPS | 443 | Secure browser-based (no public IP) |
+| **Run Command** | HTTPS | — | Execute script without any connection |
+| **Serial Console** | — | — | Emergency access when VM won't boot |
 
-**Windows RDP (Remote Desktop Protocol)**
-- **Port:** 3389
-- **Tool:** Remote Desktop Connection, mstsc.exe
-- **Security:** Don't expose to internet (use Bastion)
+{: .tip }
+**Exam:** Never expose RDP/SSH directly to the internet. Use Bastion or Just-In-Time VM access.
 
-**Linux SSH (Secure Shell)**
-- **Port:** 22
-- **Key-based auth:** SSH keys (preferred)
-- **Password auth:** Less secure
-
-### Azure Bastion
-- **Secure RDP/SSH** without public IP
-- **Browser-based** access
-- **Cost:** ~$10/hour
-- **Best for:** Jump host, security
-
-### Run Command
-- **Execute commands** on VM without RDP/SSH
-- **Built-in** (no agent needed)
-- **Use case:** Quick fixes, scripts
-- **Output:** Command output returned
-
-### VM Agent
-- **System service** on VM
-- **Manages extensions**
-- **Runs scripts**
-- **Enabled by default** (most images)
+### Just-In-Time (JIT) VM Access
+- Locks down RDP/SSH ports by default
+- Opens port only for approved duration (e.g. 3 hours) from specific IP
+- Requires Microsoft Defender for Cloud Standard
 
 ---
 
-## Updates & Patching
+## Azure Containers
 
-### Automatic Patching
-- **Windows:** Enable automatic updates (recommended)
-- **Linux:** Use package manager or automation
+### Container Instances (ACI)
+Fastest way to run a container — no cluster, no VMs to manage.
 
-### Azure Update Management
-- **Centralized patch** management
-- **Schedule patches** (Tuesday 2am, etc.)
-- **Track compliance** (patched vs unpatched)
-- **Pre/post scripts** for custom steps
+```
+docker run → az container create
+Pay per second. Gone when done.
+Good for: one-off tasks, CI/CD steps, event-driven jobs
+```
 
-### Maintenance Configuration
-- **Schedule maintenance** windows
-- **Group VMs** for bulk updates
-- **Prevent simultaneous** updates
+### Azure Kubernetes Service (AKS)
+Managed Kubernetes for production container workloads.
 
----
+```
+Control plane: Microsoft manages (free)
+Node pools:    VMs you pay for
 
-## VM Monitoring
+Pods ──→ Nodes (VMs) ──→ Node Pool ──→ AKS Cluster
+```
 
-### Diagnostics
-- **Boot diagnostics:** Startup troubleshooting
-- **Guest OS diagnostics:** OS-level monitoring
-- **CPU, memory, disk** metrics
+- Auto-scale node pools based on demand
+- Integrate with Azure AD, Monitor, Container Registry
+- Use when: microservices, many containers, need orchestration
 
-### Metrics & Alerts
-- **Metric:** CPU %, Memory %, Disk I/O
-- **Alert:** Notify when threshold exceeded
-- **Action:** Email, SMS, webhook, automation
+### Azure Container Registry (ACR)
+Private Docker registry in Azure. Store and manage container images.
 
----
-
-## Azure Container Instances (ACI)
-
-### Containers vs VMs
-| | Container | VM |
-|--|-----------|-----|
-| **Size** | MB | GB |
-| **Startup** | Seconds | Minutes |
-| **OS** | Shared | Full OS |
-| **Cost** | Cheaper | More |
-| **Use** | Apps | Any workload |
-
-### ACI Features
-- **Quick container deployment**
-- **No container orchestration** (simple)
-- **Serverless** (no infrastructure)
-- **Pay per second**
-
-### When to Use ACI
-- **Simple containers** (not many)
-- **Short-running** tasks
-- **One-off jobs**
-- **Best for:** Batch jobs, scripts, microservices
+```
+Build image → push to ACR → AKS or ACI pulls from ACR
+```
 
 ---
 
-## Azure Kubernetes Service (AKS)
+## VM Images & Templates
 
-### Kubernetes Basics
-- **Container orchestration** platform
-- **Manages scaling, deployment,** networking
-- **Nodes:** VMs running containers
-- **Pods:** Smallest unit (one or more containers)
-- **Services:** Expose pods to network
+### Azure Compute Gallery (Shared Image Gallery)
+Store and replicate custom VM images across regions. Share across subscriptions.
 
-### AKS Features
-- **Managed Kubernetes** (Microsoft manages control plane)
-- **Auto-scaling** (node pools)
-- **Integrated monitoring**
-- **RBAC** for cluster access
+### ARM Templates / Bicep
+Deploy VMs (and all dependencies) as code.
 
-### When to Use AKS
-- **Complex, multi-container** apps
-- **Need auto-scaling**
-- **Microservices architecture**
-- **Learning curve:** Steep
+```json
+// ARM: verbose JSON
+// Bicep: cleaner syntax, same result
+resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = { ... }
+```
 
 ---
 
-## Instance Metadata Service (IMDS)
+## Exam Checklist
 
-### What Is It?
-- **Local HTTP endpoint** on every VM
-- **Provides VM info:** IP, location, SSH keys
-- **Access:** 169.254.169.254 (internal only)
-- **No authentication** needed
-
-### Use Cases
-- **Get VM name/region** at runtime
-- **Fetch managed identity token** (IMDS endpoint)
-- **Application configuration** stored in IMDS
-
----
-
-## Exam Tips
-
-- **VMSS:** Auto-scale, load balance, multiple VMs
-- **Availability Set:** Spread across hardware
-- **Availability Zones:** Spread across data centers (prefer this)
-- **RDP:** Windows remote access (port 3389)
-- **SSH:** Linux remote access (port 22)
-- **Bastion:** Secure RDP/SSH without public IP
-- **Extensions:** Post-deployment configuration
-- **ACI:** Simple containers, quick start
-- **AKS:** Complex Kubernetes workloads
-- **IMDS:** Get VM info from within VM
+- [ ] Explain the difference between Stopped and Deallocated (billing)
+- [ ] Name 3 VM disk types and when each is appropriate
+- [ ] Explain Availability Set vs Availability Zones (SLA difference)
+- [ ] Describe VMSS and how auto-scale works
+- [ ] Name 3 VM extensions and their purpose
+- [ ] Explain when to use ACI vs AKS
+- [ ] Explain JIT VM access and why it's better than open RDP

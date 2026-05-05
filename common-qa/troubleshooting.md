@@ -1,4 +1,10 @@
-# Troubleshooting Guide 🔧
+---
+title: Troubleshooting Guide
+parent: Common Q&A
+nav_order: 3
+---
+
+# Troubleshooting Guide
 
 Quick reference for diagnosing Azure issues.
 

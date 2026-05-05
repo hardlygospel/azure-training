@@ -1,0 +1,37 @@
+title: Azure Training Hub
+description: Quick reference guides for Azure Fundamentals (AZ-900) and Azure Administrator (AZ-801)
+remote_theme: just-the-docs/just-the-docs
+
+color_scheme: dark
+search_enabled: true
+permalink: pretty
+
+heading_anchors: true
+back_to_top: true
+back_to_top_text: "Back to top"
+
+footer_content: "Azure Training Hub &mdash; <a href='https://hardlygospel.github.io'>hardlygospel.github.io</a> &mdash; Free exam prep"
+
+aux_links:
+  "← Homepage":
+    - "https://hardlygospel.github.io"
+  "GitHub":
+    - "https://github.com/hardlygospel/azure-training"
+
+aux_links_new_tab: true
+
+callouts_level: quiet
+callouts:
+  tip:
+    title: Exam Tip
+    color: green
+  note:
+    title: Note
+    color: blue
+  warning:
+    title: Watch out
+    color: yellow
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
