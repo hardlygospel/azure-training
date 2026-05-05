@@ -1,29 +1,50 @@
-# Azure Fundamentals (AZ-900) 🚀
+---
+title: Azure Fundamentals (AZ-900)
+nav_order: 2
+has_children: true
+permalink: /azure-fundamentals/
+---
 
-A complete quick reference for the Azure Fundamentals certification exam.
+# Azure Fundamentals (AZ-900)
 
-## Chapters
+[![AZ-900](https://img.shields.io/badge/Exam-AZ--900-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)]()
+[![Beginner](https://img.shields.io/badge/Level-Beginner-22c55e?style=flat-square)]()
+[![Duration](https://img.shields.io/badge/Exam-45--60%20min-6366f1?style=flat-square)]()
+[![Pass](https://img.shields.io/badge/Pass%20Score-~700%2F1000-f59e0b?style=flat-square)]()
 
-1. [Cloud Concepts](./01-cloud-concepts.md)
-2. [Azure Services](./02-azure-services.md)
-3. [Pricing & Support](./03-pricing-support.md)
-4. [Security, Privacy & Compliance](./04-security-compliance.md)
-
-## Exam Format
-
-- **Duration:** 45-60 minutes
-- **Questions:** 40-60 (multiple choice, drag-and-drop, hot area)
-- **Passing Score:** ~70% (~27-35 correct)
-- **Cost:** Free (with Azure free account)
-
-## Key Topics to Master
-
-✓ Cloud concepts and models  
-✓ Azure services and products  
-✓ Pricing and cost management  
-✓ Security and compliance  
-✓ Support plans  
+Entry-level Azure certification. Tests cloud concepts and Azure service knowledge — no hands-on labs.
 
 ---
 
-**Tip:** Focus on understanding *why* Azure services exist, not just *what* they do.
+## Chapters
+
+| # | Topic | What it covers |
+|---|---|---|
+| 1 | [Cloud Concepts](./01-cloud-concepts) | Cloud models, IaaS/PaaS/SaaS, benefits |
+| 2 | [Azure Services](./02-azure-services) | Compute, storage, networking, databases |
+| 3 | [Pricing & Support](./03-pricing-support) | Costs, SLAs, support plans |
+| 4 | [Security & Compliance](./04-security-compliance) | RBAC, encryption, compliance standards |
+
+---
+
+## Exam at a Glance
+
+- **Duration:** 45–60 minutes
+- **Questions:** 40–60 (multiple choice, drag-and-drop, hot area)
+- **Passing Score:** ~700/1000 (~70%)
+- **Cost:** ~$165 USD (or free with learning credits)
+- **No labs** — conceptual knowledge only
+
+## Topic Weights (approximate)
+
+| Domain | Weight |
+|---|---|
+| Cloud concepts | 25–30% |
+| Azure services | 35–40% |
+| Pricing, SLA, lifecycle | 10–15% |
+| Security, privacy, compliance | 25–30% |
+
+---
+
+{: .tip }
+Focus on *why* a service exists and *when* you'd choose it. The exam tests judgment, not memorisation.

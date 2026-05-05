@@ -1,217 +1,191 @@
-# 1. Identity & Access Management 👤
+---
+title: 1. Identity & Access
+parent: Azure Administrator (AZ-801)
+nav_order: 1
+---
+
+# Identity & Access Management
+
+[![AZ-801](https://img.shields.io/badge/AZ--801-Domain%201-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)]()
+[![Weight](https://img.shields.io/badge/Exam%20Weight-20--25%25-f59e0b?style=flat-square)]()
+
+---
 
 ## Azure Active Directory (Entra ID)
 
-### What is AAD?
-- **Identity provider** for Azure and Microsoft services
-- **Single Sign-On (SSO)** across applications
-- **Directory:** Contains users, groups, and applications
-- **Tenant:** Your organization's AAD instance
+Your cloud **identity directory**. Every user, group, app, and device lives here.
 
-### Key Concepts
-- **User Account:** Real person
-- **Service Principal:** App/service identity
-- **Managed Identity:** AAD identity for Azure resources (no password needed)
-- **Guest User:** External user invited to tenant
+| Concept | Description |
+|---|---|
+| **Tenant** | Your organisation's AAD instance |
+| **User** | A person with a login |
+| **Group** | Collection of users for bulk permissions |
+| **Service Principal** | App/service identity (has client ID + secret) |
+| **Managed Identity** | Azure resource identity — no password needed |
+| **Guest User** | External person invited via B2B |
 
----
-
-## User & Group Management
-
-### Creating Users
-- **Cloud-only:** Create directly in AAD
-- **Synced:** From on-premises Active Directory (Azure AD Connect)
-
-### Guest Users
-- **Invite external users** (contractors, partners)
-- **Limited permissions** by default
-- **B2B Collaboration:** Cross-org access
-
-### Groups
-- **Security groups:** For access control (RBAC)
-- **Microsoft 365 groups:** For collaboration (Teams, SharePoint)
-- **Distribution lists:** Email grouping (on-prem)
-
-### Dynamic Groups
-- **Automatic membership** based on rules
-- **Example:** All marketing department users automatically added
+{: .tip }
+**Prefer Managed Identity** over Service Principal wherever possible — no secrets to rotate.
 
 ---
 
-## Authentication Methods
+## User Types
 
-### Traditional
-- **Username + Password:** Basic, not recommended for production
-- **Multi-Factor Authentication (MFA):** Required for security
+| Type | Created in | Synced from | Use |
+|---|---|---|---|
+| **Cloud-only** | Azure AD | — | Pure cloud environment |
+| **Synced** | On-prem AD | Azure AD Connect | Hybrid environment |
+| **Guest** | Invitation | External tenant | Partners, contractors |
 
-### Modern Authentication
-- **Windows Hello:** Biometric/PIN
-- **FIDO2:** Security key (hardware token)
-- **Passwordless sign-in:** App approval or phone sign-in
+### Azure AD Connect
+Syncs on-premises Active Directory → Azure AD.
 
-### MFA Options
-1. **Microsoft Authenticator App:** Notification approval
-2. **SMS:** Text message code
-3. **Voice Call:** Phone verification
-4. **Hardware token:** Time-based OTP device
+```
+On-prem AD  ──[Azure AD Connect]──→  Azure AD (Entra ID)
+Users, groups, passwords synced continuously
+```
 
-**Best Practice:** Passwordless + MFA for critical accounts
+Options:
+- **Password Hash Sync** — Hash synced to cloud (simplest, recommended)
+- **Pass-through Auth** — Auth happens on-prem (no hash leaves network)
+- **Federation (ADFS)** — Complex, mostly legacy
+
+---
+
+## Authentication
+
+### Multi-Factor Authentication (MFA)
+
+| Method | Strength |
+|---|---|
+| **FIDO2 / Windows Hello** | Strongest — phishing-resistant |
+| **Authenticator app (push)** | Strong |
+| **Authenticator app (TOTP)** | Good |
+| **SMS / phone call** | Weak — SIM-swap vulnerable |
+
+### Conditional Access
+Policy engine: **if** conditions → **then** grant/block/require MFA.
+
+```
+IF:  User is in "Finance" group
+AND: Signing in from outside corporate network
+AND: Device is not compliant
+THEN: Block access
+```
+
+Common conditions: location, device compliance, sign-in risk, user group, app being accessed.
 
 ---
 
 ## Role-Based Access Control (RBAC)
 
-### How RBAC Works
 ```
-Security Principal + Role + Scope = Permission
-(User/Group)      (Permissions) (Resource level)
+Principal   +   Role definition   +   Scope   =   Permission
+(who)           (what actions)        (where)
+
+Example:
+Alice  +  Contributor  +  /subscriptions/abc123/resourceGroups/Prod
+= Alice can do anything in the Prod resource group
 ```
 
-### Assignment Process
-1. Go to resource (VM, RG, subscription)
-2. Add Role Assignment
-3. Select role (Reader, Contributor, Owner, custom)
-4. Select user/group/service principal
-5. Save
+### Assignment Process (Portal)
+1. Navigate to resource / RG / subscription
+2. **Access control (IAM)** → **Add role assignment**
+3. Select role → Select member → Save
 
-### Scope Levels (top to bottom)
-- **Management Group:** Multiple subscriptions
-- **Subscription:** Entire subscription
-- **Resource Group:** All resources in RG
-- **Resource:** Single VM, database, etc.
+### Scope Hierarchy
+```
+Management Group  (highest — inheritance flows down)
+  └── Subscription
+        └── Resource Group
+              └── Resource  (most specific — overrides higher)
+```
 
-### Permission Inheritance
-- Permissions flow **down** (inheritance)
-- Assign at higher scope = applies to everything below
-- Most specific permission **wins**
+**Most specific scope wins.** Deny at any level overrides Allow.
 
----
+### Built-in Roles
 
-## Built-in Roles (Key Ones)
+| Role | Create/Edit | Delete | Assign roles |
+|---|---|---|---|
+| **Owner** | ✓ | ✓ | ✓ |
+| **Contributor** | ✓ | ✓ | ✗ |
+| **Reader** | ✗ | ✗ | ✗ |
+| **User Access Administrator** | ✗ | ✗ | ✓ |
 
-| Role | What They Can Do | Best For |
-|------|-----------------|----------|
-| **Owner** | Everything + assign roles | Admin users |
-| **Contributor** | Create/modify (no role assignment) | Developers |
-| **Reader** | View only | Auditors |
-| **User Access Admin** | Manage role assignments only | Access control team |
-| **Virtual Machine Contributor** | Manage VMs only | VM-specific admins |
+### Custom Roles
+When no built-in role fits. Define exact allowed actions.
 
----
-
-## Custom Roles
-
-### When to Create Custom Roles
-- **Existing roles too permissive**
-- **Need specific permission combination**
-- **Compliance requirement:** Least privilege
-
-### Custom Role Structure
 ```json
 {
-  "Name": "VM Restarter",
-  "Permissions": [
+  "Name": "VM Operator",
+  "Actions": [
+    "Microsoft.Compute/virtualMachines/start/action",
     "Microsoft.Compute/virtualMachines/restart/action",
     "Microsoft.Compute/virtualMachines/read"
-  ]
+  ],
+  "NotActions": [],
+  "AssignableScopes": ["/subscriptions/your-sub-id"]
 }
 ```
 
+{: .tip }
+Custom roles are created at subscription or management group scope, then assigned anywhere within that scope.
+
 ---
 
-## Service Principals & Managed Identities
+## Managed Identities
 
-### Service Principal (App Identity)
-- **App registration** in AAD
-- **Username/password** (not recommended)
-- **Certificate-based** (secure)
-- **Use case:** App needs Azure API access
+Azure handles credentials automatically — no secrets stored anywhere.
 
-### Managed Identity
-- **No password management**
-- **Automatic credential rotation**
-- **AAD-issued token** automatically
-- **Recommended:** For Azure resources
+| Type | Lifecycle | Use when |
+|---|---|---|
+| **System-assigned** | Created/deleted with resource | One resource needs identity |
+| **User-assigned** | Independent resource | Multiple resources share same identity |
 
-#### Types of Managed Identity
-- **System-assigned:** One per resource (created/deleted with resource)
-- **User-assigned:** Created separately, reusable across resources
-
-### Example: VM with Managed Identity
+### How to use (example: VM accessing Key Vault)
 1. Enable managed identity on VM
-2. Assign role to managed identity
-3. VM automatically gets token
-4. No credentials stored
+2. Assign Key Vault role to that identity
+3. VM gets token automatically from IMDS (169.254.169.254)
+4. No credentials in code
 
 ---
 
-## Conditional Access
+## Privileged Identity Management (PIM)
 
-### What Is It?
-- **Policy-based access** (if-then rules)
-- **Block or grant** based on conditions
-- **No passwords needed** in some scenarios
+Just-in-time privileged access — roles are **eligible** not **permanent**.
 
-### Common Conditions
-- **Location:** Block access from outside corporate network
-- **Device:** Require compliant device
-- **Risk:** Block risky sign-in attempts
-- **User/Group:** Different rules for different people
-
-### Example Policy
 ```
-IF user signs in from foreign country
-AND device is not enrolled
-THEN block access
-ELSE require MFA
+Normal day → User has Reader role
+Need admin access → Request elevation (approval required)
+After task → Role expires automatically
 ```
+
+Benefits: reduces standing privileged access, full audit trail, requires justification.
 
 ---
 
-## Azure AD Connect
+## Administrative Units
 
-### Purpose
-- **Sync** on-premises AD users to Azure AAD
-- **One identity** across cloud and on-prem
-- **Seamless experience** (users same username everywhere)
+Delegate administration to a subset of users.
 
-### Two Modes
-- **Password Hash Sync:** Hashes synced (simple)
-- **Pass-Through Auth:** Authentication happens on-prem
-- **Federation (ADFS):** Complex, legacy
+```
+Global Admin sets up:
+  AU: "Sydney Office"
+  Assigns: Sydney IT team as User Admin for that AU only
+  Result: Sydney IT can manage Sydney users — can't touch Melbourne
+```
 
-### What Gets Synced?
-- User accounts
-- Groups
-- Email addresses
-- Home directory path
-- License assignments
+Use for large organisations with regional IT teams.
 
 ---
 
-## Administrative Units (AUs)
+## Exam Checklist
 
-### Purpose
-- **Delegate admin** to non-global admins
-- **Scope:** User accounts in specific OU only
-- **Use case:** Multi-tenant, large organizations
-
-### Example
-```
-AU: "Sales Department"
-Admin: Can only manage users in Sales AU
-Cannot touch HR or Finance users
-```
-
----
-
-## Exam Tips
-
-- **RBAC:** Principle of least privilege (most important)
-- **Scope:** Highest level = most impact (assign carefully)
-- **MFA:** Always recommended for production
-- **Managed Identity:** Preferred over certificates
-- **Custom Roles:** Only when built-in roles don't fit
-- **Service Principal:** For apps; Managed Identity preferred
-- **Azure AD Connect:** For hybrid (on-prem + cloud)
-- **Conditional Access:** For policy-based security
+- [ ] Explain cloud-only vs synced vs guest users
+- [ ] Name 3 MFA methods and rank by strength
+- [ ] Explain Conditional Access — conditions and controls
+- [ ] Assign a role at resource group scope in the portal
+- [ ] Explain scope inheritance (management group → resource)
+- [ ] Explain system-assigned vs user-assigned managed identity
+- [ ] Describe when to use a custom role
+- [ ] Explain PIM and why it's used

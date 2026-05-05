@@ -1,4 +1,10 @@
-# Azure Fundamentals (AZ-900) Q&A 🎯
+---
+title: AZ-900 Q&A
+parent: Common Q&A
+nav_order: 1
+---
+
+# Azure Fundamentals (AZ-900) Q&A
 
 ## Cloud Models & Concepts
 
