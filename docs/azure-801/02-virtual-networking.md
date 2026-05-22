@@ -1,8 +1,3 @@
----
-title: 2. Virtual Networking
-parent: Azure Administrator (AZ-801)
-nav_order: 2
----
 
 # Virtual Networking
 

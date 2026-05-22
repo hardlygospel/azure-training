@@ -1,8 +1,3 @@
----
-title: 2. Azure Services
-parent: Azure Fundamentals (AZ-900)
-nav_order: 2
----
 
 # Azure Services & Products
 

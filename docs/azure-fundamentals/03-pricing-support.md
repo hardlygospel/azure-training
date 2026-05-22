@@ -1,8 +1,3 @@
----
-title: 3. Pricing & Support
-parent: Azure Fundamentals (AZ-900)
-nav_order: 3
----
 
 # Pricing & Support
 

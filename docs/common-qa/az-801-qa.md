@@ -1,8 +1,3 @@
----
-title: AZ-801 Q&A
-parent: Common Q&A
-nav_order: 2
----
 
 # Azure Administrator (AZ-801) Q&A
 

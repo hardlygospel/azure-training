@@ -1,9 +1,3 @@
----
-title: Azure Fundamentals (AZ-900)
-nav_order: 2
-has_children: true
-permalink: /azure-fundamentals/
----
 
 # Azure Fundamentals (AZ-900)
 

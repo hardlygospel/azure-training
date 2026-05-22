@@ -1,9 +1,3 @@
----
-title: Common Q&A
-nav_order: 4
-has_children: true
-permalink: /common-qa/
----
 
 # Common Q&A
 
