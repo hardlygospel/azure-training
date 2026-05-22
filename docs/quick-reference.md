@@ -1,7 +1,3 @@
----
-title: Quick Reference Cheat Sheet
-nav_order: 5
----
 
 # Azure Quick Reference Cheat Sheet
 
