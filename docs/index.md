@@ -1,6 +1,10 @@
 
 # Azure Training Hub
 
+[![AZ-900](https://img.shields.io/badge/Exam-AZ--900-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)](https://learn.microsoft.com/en-us/credentials/certifications/exams/az-900/)
+[![AZ-801](https://img.shields.io/badge/Exam-AZ--801-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)](https://learn.microsoft.com/en-us/credentials/certifications/exams/az-801/)
+[![Free](https://img.shields.io/badge/Cost-Free-22c55e?style=flat-square)](https://github.com/hardlygospel/azure-training)
+
 Quick reference guides for passing Azure certifications. Succinct, exam-focused, with Q&A and troubleshooting.
 
 ---
