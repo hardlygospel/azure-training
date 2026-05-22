@@ -1,0 +1,46 @@
+site_name: Azure Training
+site_description: >-
+  Azure Fundamentals (AZ-900) and Administrator (AZ-801) quick reference —
+  cloud concepts, networking, compute, storage, identity, monitoring,
+  Q&A and troubleshooting.
+site_url: https://hardlygospel.github.io/azure-training/
+repo_url: https://github.com/hardlygospel/azure-training
+copyright: Azure Training — hardlygospel.github.io
+
+theme:
+  name: material
+  icon:
+    logo: material/microsoft-azure
+  palette:
+    - scheme: slate
+      primary: blue
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to light
+    - scheme: default
+      primary: blue
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - footnotes
+  - admonition
+  - attr_list
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Quick Reference: quick-reference.md
