@@ -1,10 +1,6 @@
 
 # Azure Training Hub
 
-[![AZ-900](https://img.shields.io/badge/Exam-AZ--900-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)](./azure-fundamentals/)
-[![AZ-801](https://img.shields.io/badge/Exam-AZ--801-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)](./azure-801/)
-[![Free](https://img.shields.io/badge/Cost-Free-22c55e?style=flat-square)](https://github.com/hardlygospel/azure-training)
-
 Quick reference guides for passing Azure certifications. Succinct, exam-focused, with Q&A and troubleshooting.
 
 ---
@@ -16,7 +12,7 @@ Quick reference guides for passing Azure certifications. Succinct, exam-focused,
 | Learn cloud basics & pass AZ-900 | [Azure Fundamentals →](./azure-fundamentals/) |
 | Learn admin skills & pass AZ-801 | [Azure Administrator →](./azure-801/) |
 | Find an answer fast | [Common Q&A →](./common-qa/) |
-| Cram before the exam | [Quick Reference Cheat Sheet →](./QUICK-REFERENCE) |
+| Cram before the exam | [Quick Reference Cheat Sheet →](quick-reference.md) |
 
 ---
 
