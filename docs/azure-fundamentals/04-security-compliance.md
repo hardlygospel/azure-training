@@ -1,8 +1,3 @@
----
-title: 4. Security & Compliance
-parent: Azure Fundamentals (AZ-900)
-nav_order: 4
----
 
 # Security, Privacy & Compliance
 

@@ -1,8 +1,3 @@
----
-title: 4. Storage & Backup
-parent: Azure Administrator (AZ-801)
-nav_order: 4
----
 
 # Storage & Backup
 

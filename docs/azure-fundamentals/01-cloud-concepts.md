@@ -1,8 +1,3 @@
----
-title: 1. Cloud Concepts
-parent: Azure Fundamentals (AZ-900)
-nav_order: 1
----
 
 # Cloud Concepts & Models
 

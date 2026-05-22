@@ -13,9 +13,9 @@ Quick reference guides for passing Azure certifications. Succinct, exam-focused,
 
 | I want to… | Go here |
 |---|---|
-| Learn cloud basics & pass AZ-900 | [Azure Fundamentals →](./azure-fundamentals/) |
-| Learn admin skills & pass AZ-801 | [Azure Administrator →](./azure-801/) |
-| Find an answer fast | [Common Q&A →](./common-qa/) |
+| Learn cloud basics & pass AZ-900 | [Azure Fundamentals →](azure-fundamentals/README.md) |
+| Learn admin skills & pass AZ-801 | [Azure Administrator →](azure-801/README.md) |
+| Find an answer fast | [Common Q&A →](common-qa/README.md) |
 | Cram before the exam | [Quick Reference Cheat Sheet →](quick-reference.md) |
 
 ---

@@ -1,8 +1,3 @@
----
-title: 1. Identity & Access
-parent: Azure Administrator (AZ-801)
-nav_order: 1
----
 
 # Identity & Access Management
 

@@ -1,9 +1,3 @@
----
-title: Azure Administrator (AZ-801)
-nav_order: 3
-has_children: true
-permalink: /azure-801/
----
 
 # Azure Administrator (AZ-801)
 

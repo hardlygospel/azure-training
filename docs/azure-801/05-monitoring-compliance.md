@@ -1,8 +1,3 @@
----
-title: 5. Monitoring & Compliance
-parent: Azure Administrator (AZ-801)
-nav_order: 5
----
 
 # Monitoring & Compliance
 

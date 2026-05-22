@@ -29,12 +29,14 @@ theme:
     - navigation.tracking
     - navigation.top
     - navigation.footer
+    - navigation.indexes
     - search.suggest
     - search.highlight
     - content.code.copy
 
 markdown_extensions:
   - footnotes
+  - md_in_html
   - admonition
   - attr_list
   - pymdownx.superfences
@@ -43,4 +45,22 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Azure Fundamentals (AZ-900):
+      - azure-fundamentals/README.md
+      - 1. Cloud Concepts: azure-fundamentals/01-cloud-concepts.md
+      - 2. Azure Services: azure-fundamentals/02-azure-services.md
+      - 3. Pricing & Support: azure-fundamentals/03-pricing-support.md
+      - 4. Security & Compliance: azure-fundamentals/04-security-compliance.md
+  - Azure Administrator (AZ-801):
+      - azure-801/README.md
+      - 1. Identity & Access: azure-801/01-identity-access.md
+      - 2. Virtual Networking: azure-801/02-virtual-networking.md
+      - 3. Compute Management: azure-801/03-compute-management.md
+      - 4. Storage & Backup: azure-801/04-storage-backup.md
+      - 5. Monitoring & Compliance: azure-801/05-monitoring-compliance.md
+  - Common Q&A:
+      - common-qa/README.md
+      - AZ-900 Q&A: common-qa/az-900-qa.md
+      - AZ-801 Q&A: common-qa/az-801-qa.md
+      - Troubleshooting Guide: common-qa/troubleshooting.md
   - Quick Reference: quick-reference.md

@@ -1,8 +1,3 @@
----
-title: 3. Compute Management
-parent: Azure Administrator (AZ-801)
-nav_order: 3
----
 
 # Compute Management
 
