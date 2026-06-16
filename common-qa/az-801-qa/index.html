@@ -1,0 +1,1452 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Azure Fundamentals (AZ-900) and Administrator (AZ-801) quick reference — cloud concepts, networking, compute, storage, identity, monitoring, Q&A and troubleshooting.">
+      
+      
+      
+        <link rel="canonical" href="https://hardlygospel.github.io/azure-training/common-qa/az-801-qa/">
+      
+      
+        <link rel="prev" href="../az-900-qa/">
+      
+      
+        <link rel="next" href="../troubleshooting/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>AZ-801 Q&A - Azure Training</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#azure-administrator-az-801-qa" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Azure Training" class="md-header__button md-logo" aria-label="Azure Training" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.05 4.24 6.56 18.05 2 18l5.09-8.76zm.7 1.09L22 19.76H6.74l9.3-1.66-4.87-5.79z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Azure Training
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              AZ-801 Q&A
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="amber"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="amber"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hardlygospel/azure-training" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Azure Training" class="md-nav__button md-logo" aria-label="Azure Training" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.05 4.24 6.56 18.05 2 18l5.09-8.76zm.7 1.09L22 19.76H6.74l9.3-1.66-4.87-5.79z"/></svg>
+
+    </a>
+    Azure Training
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardlygospel/azure-training" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../azure-fundamentals/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Fundamentals (AZ-900)
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Azure Fundamentals (AZ-900)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../azure-fundamentals/01-cloud-concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Cloud Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../azure-fundamentals/02-azure-services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Azure Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../azure-fundamentals/03-pricing-support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Pricing & Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../azure-fundamentals/04-security-compliance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Security & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../azure-801/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Administrator (AZ-801)
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Azure Administrator (AZ-801)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../azure-801/01-identity-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Identity & Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../azure-801/02-virtual-networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Virtual Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../azure-801/03-compute-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Compute Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../azure-801/04-storage-backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Storage & Backup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../azure-801/05-monitoring-compliance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Monitoring & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common Q&A
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Common Q&A
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../az-900-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AZ-900 Q&A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AZ-801 Q&A
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AZ-801 Q&A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#identity-access-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity &amp; Access Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Networking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage &amp; Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring &amp; Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Scenarios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exam-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exam Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#study-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Study Tips ✅
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#identity-access-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity &amp; Access Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Networking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage &amp; Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring &amp; Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Scenarios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exam-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exam Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#study-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Study Tips ✅
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="azure-administrator-az-801-qa">Azure Administrator (AZ-801) Q&amp;A<a class="headerlink" href="#azure-administrator-az-801-qa" title="Permanent link">&para;</a></h1>
+<h2 id="identity-access-management">Identity &amp; Access Management<a class="headerlink" href="#identity-access-management" title="Permanent link">&para;</a></h2>
+<p><strong>Q: When should I use a service principal vs managed identity?</strong>
+A:
+- <strong>Managed Identity:</strong> Azure resource needs access (preferred, no password)
+- <strong>Service Principal:</strong> App outside Azure, or fine-grained control needed
+- <strong>Best practice:</strong> Always try managed identity first</p>
+<p><strong>Q: How do I give a user permission to only restart VMs?</strong>
+A: Create <strong>custom role</strong> with only "restart" permission, assign to that user.</p>
+<p><strong>Q: What's the difference between system-assigned and user-assigned managed identity?</strong>
+A:
+- <strong>System-assigned:</strong> Created/deleted with resource (1:1)
+- <strong>User-assigned:</strong> Created separately, reusable (1:many)
+- <strong>When to use:</strong> System = simple, User = shared across resources</p>
+<p><strong>Q: Can I have MFA without password?</strong>
+A: <strong>Yes</strong>, with passwordless sign-in (Windows Hello, FIDO2, authenticator app approval).</p>
+<p><strong>Q: How do I let on-premises users access Azure resources?</strong>
+A: Use <strong>Azure AD Connect</strong> to sync identities, then assign roles.</p>
+<p><strong>Q: What if a user has two roles with different permissions?</strong>
+A: <strong>Union of permissions</strong> (most permissive wins). If one allows and one denies, <strong>Deny wins</strong>.</p>
+<hr />
+<h2 id="virtual-networking">Virtual Networking<a class="headerlink" href="#virtual-networking" title="Permanent link">&para;</a></h2>
+<p><strong>Q: How do I prevent internet access from my VMs?</strong>
+A: 
+1. Remove public IP
+2. Block outbound 443/80 in NSG
+3. Don't assign them to public subnet
+4. Or: Use <strong>Azure Firewall</strong> to control outbound</p>
+<p><strong>Q: Can I have two VNets with the same IP range?</strong>
+A: <strong>Yes</strong>, if they don't peer/connect. Once peered, must be different.</p>
+<p><strong>Q: What's the smallest subnet I can create?</strong>
+A: <strong>/30</strong> (4 IPs), but Azure reserves 5. So /30 = only 1 usable IP (not recommended).</p>
+<p><strong>Q: How do I route traffic through a firewall?</strong>
+A: Create <strong>route table</strong>:
+- Destination: Traffic to reach
+- Next hop: Firewall VM IP
+- Apply to subnet</p>
+<p><strong>Q: Can I use 0.0.0.0/0 as source in NSG?</strong>
+A: <strong>Yes</strong> (allow from internet). Good for web servers, bad for databases.</p>
+<p><strong>Q: What's better: NSG or Azure Firewall?</strong>
+A:
+- <strong>NSG:</strong> Simple, free, VM-level
+- <strong>Firewall:</strong> Complex rules, advanced features, centralized
+- <strong>Enterprise:</strong> Use both (NSG + Firewall)</p>
+<p><strong>Q: How do I test if a VM can reach another VM?</strong>
+A: Use <strong>Network Watcher → IP Flow Verify</strong> or ping (if ICMP allowed).</p>
+<hr />
+<h2 id="compute-management">Compute Management<a class="headerlink" href="#compute-management" title="Permanent link">&para;</a></h2>
+<p><strong>Q: How do I ensure my VM doesn't go down?</strong>
+A: Deploy 2+ VMs across <strong>availability zones</strong>, behind load balancer.</p>
+<p><strong>Q: What's the difference between availability set and availability zones?</strong>
+A:
+- <strong>Availability Set:</strong> Spread across hardware (same zone)
+- <strong>Availability Zones:</strong> Spread across data centers (separate zones)
+- <strong>Prefer:</strong> Zones (better SLA: 99.99% vs 99.95%)</p>
+<p><strong>Q: Can I resize a VM while it's running?</strong>
+A: <strong>Sometimes</strong>:
+- <strong>Same size family:</strong> Yes (if not pinned to hardware)
+- <strong>Different family:</strong> No (must stop, resize, start)</p>
+<p><strong>Q: What's the easiest way to deploy identical VMs?</strong>
+A: Use <strong>scale set</strong> or <strong>custom image</strong> + ARM template.</p>
+<p><strong>Q: How do I connect to a Linux VM without SSH key?</strong>
+A: Use <strong>Azure Bastion</strong> (browser-based RDP/SSH).</p>
+<p><strong>Q: Can I install software on a VM after creation?</strong>
+A: <strong>Yes</strong>, via:
+- <strong>Custom Script Extension</strong> (PowerShell/bash)
+- <strong>Azure Automation</strong> (Desired State Config)
+- <strong>Manual RDP/SSH</strong></p>
+<p><strong>Q: What's the max number of VMs in a scale set?</strong>
+A: <strong>1000</strong> (can be increased with request).</p>
+<p><strong>Q: How do I monitor VM performance?</strong>
+A: <strong>Azure Monitor</strong> → Metrics (CPU, Memory, Disk I/O).</p>
+<hr />
+<h2 id="storage-backup">Storage &amp; Backup<a class="headerlink" href="#storage-backup" title="Permanent link">&para;</a></h2>
+<p><strong>Q: When should I use GRS vs RA-GRS?</strong>
+A:
+- <strong>GRS:</strong> Secondary region (read-only) = $$ 
+- <strong>RA-GRS:</strong> Secondary region (read-write) = $$$
+- <strong>Use:</strong> RA-GRS if you need to fail over and read from secondary</p>
+<p><strong>Q: Can I move a blob from Hot to Archive instantly?</strong>
+A: <strong>Yes</strong>, but retrieval takes hours (Archive SLA: ~15 hours).</p>
+<p><strong>Q: How do I recover a deleted blob?</strong>
+A: If <strong>soft delete enabled</strong>: Restore from recycle bin (7-365 days). Otherwise: Restore from snapshot.</p>
+<p><strong>Q: What's the difference between a snapshot and a backup?</strong>
+A:
+- <strong>Snapshot:</strong> Point-in-time copy (incremental, cheap)
+- <strong>Backup:</strong> Full backup + incremental (managed, with retention policy)
+- <strong>Use:</strong> Snapshot for quick recovery, backup for compliance</p>
+<p><strong>Q: Can I have multiple data disks on a VM?</strong>
+A: <strong>Yes</strong> (up to 64 disks). But:
+- Size limits: Standard 4 TB, Premium 32 TB
+- Performance limits: IOPS and throughput</p>
+<p><strong>Q: What happens to data if I delete a storage account?</strong>
+A: <strong>Data is deleted</strong> (usually immediately, sometimes 30-day grace period).</p>
+<p><strong>Q: How do I encrypt data in storage?</strong>
+A: <strong>By default:</strong> Microsoft-managed encryption (free). <strong>Optional:</strong> Customer-managed keys (more control).</p>
+<p><strong>Q: Can I change storage replication after creation?</strong>
+A: <strong>Yes</strong> (portal → Storage account → Configuration → Replication). Costs may change.</p>
+<hr />
+<h2 id="monitoring-compliance">Monitoring &amp; Compliance<a class="headerlink" href="#monitoring-compliance" title="Permanent link">&para;</a></h2>
+<p><strong>Q: How long are Azure logs kept by default?</strong>
+A: <strong>Depends:</strong>
+- <strong>Metrics:</strong> 93 days
+- <strong>Logs:</strong> 30 days (default), up to 730 days (configurable)
+- <strong>Backup:</strong> 7 years typical</p>
+<p><strong>Q: What's a good alert threshold for CPU?</strong>
+A: <strong>Depends on workload</strong>, but typical:
+- Warning: 70%
+- Critical: 85%
+- For VMs: Scale up when hitting 80%</p>
+<p><strong>Q: How do I see what a user did on a resource?</strong>
+A: <strong>Activity Log</strong> (Resource → Activity Log). Shows create/delete/modify operations.</p>
+<p><strong>Q: How do I prevent someone from deleting important resources?</strong>
+A: <strong>Management Lock</strong>:
+- <strong>Read-only:</strong> Can view but not modify
+- <strong>Delete:</strong> Can modify but not delete
+- Applied at resource, RG, or subscription level</p>
+<p><strong>Q: Can I audit who accessed my database?</strong>
+A: <strong>Yes</strong>:
+- <strong>SQL Database:</strong> Audit feature (logging)
+- <strong>Storage:</strong> Storage Analytics (optional)
+- <strong>All resources:</strong> Activity Log</p>
+<p><strong>Q: How often should I review my compliance score?</strong>
+A: <strong>Weekly</strong> (or after major changes). Use <strong>Compliance Manager</strong>.</p>
+<p><strong>Q: What policy would I use to enforce tagging?</strong>
+A:
+<div class="highlight"><pre><span></span><code>Policy: &quot;Require tag: CostCenter&quot;
+Effect: Deny
+Action: Block resource creation without tag
+</code></pre></div></p>
+<p><strong>Q: Can I backup a VM to a different region?</strong>
+A: <strong>Yes</strong>:
+- <strong>Backup Vault:</strong> Cross-region restore available
+- <strong>Site Recovery:</strong> Replicate to different region</p>
+<hr />
+<h2 id="troubleshooting-scenarios">Troubleshooting Scenarios<a class="headerlink" href="#troubleshooting-scenarios" title="Permanent link">&para;</a></h2>
+<p><strong>Q: My VM can't reach the internet. What do I check?</strong>
+A: Check in order:
+1. <strong>Public IP</strong> (does VM have one?)
+2. <strong>Route Table</strong> (is there a default route to internet?)
+3. <strong>NSG</strong> (are outbound 443/80 allowed?)
+4. <strong>Network Watcher</strong> → IP Flow Verify
+5. <strong>Firewall rules</strong> (if Azure Firewall deployed)</p>
+<p><strong>Q: Can't RDP into my VM.</strong>
+A: Check:
+1. <strong>VM status</strong> (is it running?)
+2. <strong>Public IP</strong> (do I have one? use Bastion if not)
+3. <strong>NSG</strong> (is port 3389 allowed from your IP?)
+4. <strong>Firewall</strong> (personal firewall blocking port?)
+5. <strong>RDP service</strong> (running on VM?)</p>
+<p><strong>Q: Storage account requests are throttled.</strong>
+A: Solutions:
+1. <strong>Increase throughput</strong> (higher-tier disk)
+2. <strong>Distribute load</strong> (multiple storage accounts)
+3. <strong>Implement caching</strong> (CDN, Redis)</p>
+<p><strong>Q: App can't write to database.</strong>
+A: Check:
+1. <strong>Connection string</strong> (correct?)
+2. <strong>NSG</strong> (port 1433 allowed from app subnet to DB subnet?)
+3. <strong>Firewall rule</strong> (database firewall allows app?)
+4. <strong>Quota</strong> (storage space available?)
+5. <strong>Permissions</strong> (user account has write access?)</p>
+<p><strong>Q: Backup failed.</strong>
+A: Check:
+1. <strong>Backup vault:</strong> Permissions set?
+2. <strong>VM:</strong> Running, accessible?
+3. <strong>Network:</strong> Can VM reach backup service?
+4. <strong>Quota:</strong> Storage space available?
+5. <strong>Logs:</strong> Azure Monitor for error details</p>
+<hr />
+<h2 id="exam-strategy">Exam Strategy<a class="headerlink" href="#exam-strategy" title="Permanent link">&para;</a></h2>
+<p><strong>Q: How many questions should I expect on each topic?</strong>
+A: Rough breakdown:
+- <strong>Networking:</strong> 15-20%
+- <strong>Compute:</strong> 20-25%
+- <strong>Storage:</strong> 10-15%
+- <strong>Identity:</strong> 15-20%
+- <strong>Monitoring:</strong> 10-15%
+- <strong>Misc:</strong> 10%</p>
+<p><strong>Q: Should I memorize IP ranges, ports, etc.?</strong>
+A: <strong>No</strong> (exam allows reference materials). Focus on:
+- <strong>Concepts:</strong> Why use X instead of Y
+- <strong>Best practices:</strong> When to use each service
+- <strong>Troubleshooting:</strong> How to diagnose issues</p>
+<p><strong>Q: Are there labs in the exam?</strong>
+A: <strong>Yes</strong>, some questions are hands-on labs (create resources, configure settings). Practice in Azure portal!</p>
+<hr />
+<h2 id="study-tips">Study Tips ✅<a class="headerlink" href="#study-tips" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Hands-on practice</strong> — Create VMs, deploy resources in Azure</li>
+<li><strong>Use free tier</strong> — $200 credit + 12 months free services</li>
+<li><strong>Review failures</strong> — Understand why you got it wrong</li>
+<li><strong>Know the tools</strong> — Portal, CLI, PowerShell</li>
+<li><strong>Time management</strong> — ~1.5-2 minutes per question</li>
+<li><strong>Take practice exams</strong> — Microsoft Learn has official ones</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../az-900-qa/" class="md-footer__link md-footer__link--prev" aria-label="Previous: AZ-900 Q&amp;A">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                AZ-900 Q&A
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../troubleshooting/" class="md-footer__link md-footer__link--next" aria-label="Next: Troubleshooting Guide">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Troubleshooting Guide
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Azure Training — hardlygospel.github.io
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.footer", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
